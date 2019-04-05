@@ -6,7 +6,7 @@ An unlimited twitter api, his features include:
 - Output in clear and easy csv format.
 
 ## Dependencies:
-- tweepy: pip install tweepy
+- tweepy: pip install tweepy ||| link: https://github.com/tweepy/tweepy
 - pandas, sys, jsonpickle, os, dateutil.
 
 ## how it works:
