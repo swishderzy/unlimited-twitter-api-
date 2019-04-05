@@ -5,19 +5,8 @@ import os
 import dateutil.parser
 import pandas as pd
 
-# Replace the API_KEY and API_SECRET with your application's key and secret.
 
-auth = tweepy.AppAuthHandler("ojMoFI4UrHGLXYmWk0cHD6DU5", "QHK1K9kL8jOtx8cNhk1dKUp7I8ZNJmS7q4SFBXXpKGx6OIrHDf")
-
-api = tweepy.API(auth, wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
-
-if (not api):
-    print ("Can't Authenticate")
-    sys.exit(-1)
-
-# Continue with rest of code
-
-def twitter_search(q, max_tweets = 10000, lang = "en") :
+def twitter_search(q, output_path, max_tweets = 100, lang = "en") :
     searchQuery = q  # this is what we're searching for
     maxTweets = max_tweets # Some arbitrary large number
     tweetsPerQry = 100  # this is the max the API permits
@@ -87,11 +76,28 @@ def twitter_search(q, max_tweets = 10000, lang = "en") :
 
 
     df = pd.DataFrame({"date" : times, "text" : texts, "followers" : followers, "name" : names, "entities" : entities, "location" : locations, "tweet_source" : tweets_sources, "tweet_source_followers" : tweets_sources_followers})
+    if ".csv" in output_path:
+        df.to_csv(output_path)
+    else:
+        df.to_csv(output_path + f"/twitter_results_{q}_{lang}.csv")
 
     return df
 
 
 
 if __name__ == "__main__":
-    twitter_search(sys.argv[1], sys.argv[2], sys.argv[3])
+    api_key = str(sys.argv[5])
+    api_secret = str(sys.argv[6])
+    auth = tweepy.AppAuthHandler(api_key, api_secret)
+
+    api = tweepy.API(auth, wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
+
+    if (not api):
+        print ("Can't Authenticate")
+        sys.exit(-1)
+
+    twitter_search(q = str(sys.argv[1]), output_path = str(sys.argv[2]), max_tweets = int(sys.argv[3]), lang = str(sys.argv[4]))
+    
     print("Done")
+
+
